@@ -2,10 +2,12 @@ import uuid
 
 from typing import Generic, TypeVar, Type, List, Optional
 
+from utils.singleton import SingletonMeta
+
 T = TypeVar("T")
 
 
-class BaseRepository(Generic[T]):
+class BaseRepository(Generic[T], metaclass=SingletonMeta):
     def __init__(self, element_class: Type[T]):
         self.element_class = element_class
         self.db = {}

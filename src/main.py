@@ -1,9 +1,11 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 from model.entities.order_entity import OrderEntity
 from model.entities.product_entity import ProductEntity
 from repositories.order_repository import OrderRepository
 from repositories.product_repository import ProductRepository
+from services.order_validation_service import OrderValidationService
 
 app = FastAPI()
 
@@ -18,12 +20,12 @@ async def root():
 
 @app.get("/find_all")
 async def find_all():
-    return product_repository.find_all()
+    return ProductRepository().find_all()
 
 
 @app.post("/create")
 async def create(product: ProductEntity):
-    return product_repository.add(product)
+    return ProductRepository().add(product)
 
 
 @app.get("/orders/find_all")
@@ -33,4 +35,7 @@ async def find_all():
 
 @app.post("/orders/create")
 async def create(order: OrderEntity):
+    validation_errors = OrderValidationService().validate(order)
+    if len(validation_errors) != 0:
+        return JSONResponse(content=validation_errors, status_code=404)
     return order_repository.add(order)
