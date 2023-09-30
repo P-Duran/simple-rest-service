@@ -19,4 +19,3 @@ class BaseRepository(Generic[T]):
     def add(self, element: T):
         self.db[self.element_class] = {**(self.db[self.element_class] if self.element_class in self.db else {}),
                                        element.id: element}
-        print(self.db)
