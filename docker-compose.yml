@@ -1,0 +1,19 @@
+version: "3"
+services:
+  app:
+    environment:
+      - ENV=local
+      - SERVICE_USER=admin
+      - SERVICE_PASSWORD=admin
+      - NEXUS_USER=nexuswr
+      - NEXUS_PASSWORD=M@cmillan!45
+      - NEXUS_URL=https://nexustestpre.macmillan.es/api/waitingroom
+      - DYNAMIC_MODE=True
+      - DYNAMIC_THRESHOLD=10
+    container_name: fastapi
+    build: .
+    command: uvicorn --app-dir=src main:app --proxy-headers --port 8000 --host 0.0.0.0 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
