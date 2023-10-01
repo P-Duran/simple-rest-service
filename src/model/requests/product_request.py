@@ -1,12 +1,11 @@
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, BaseModel
 
 from model.dto.order_field import OrderField
-from model.entities.base_entity import BaseEntity
 
 
-class ProductEntity(BaseEntity):
+class ProductRequest(BaseModel):
     name: str
     description: str
     price: float = Field(ge=0)
