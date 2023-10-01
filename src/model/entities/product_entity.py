@@ -7,7 +7,7 @@ from model.entities.base_entity import BaseEntity
 
 
 class ProductEntity(BaseEntity):
-    name: str
-    description: str
+    name: str = Field(min_length=1)
+    description: str = Field(min_length=1)
     price: float = Field(ge=0)
     order_fields: List[OrderField]
