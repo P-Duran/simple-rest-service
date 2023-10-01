@@ -14,10 +14,8 @@ class OrderService:
         self._order_validation_service = OrderValidationService()
 
     def create(self, order: OrderRequest):
-        validation_errors = self._order_validation_service.validate(order)
-        if len(validation_errors) == 0:
-            self._order_repository.add(OrderEntity(**order.__dict__))
-        return validation_errors
+        self._order_validation_service.validate(order)
+        return self._order_repository.add(OrderEntity(**order.__dict__))
 
     def get_all(self):
         return self._order_repository.find_all()

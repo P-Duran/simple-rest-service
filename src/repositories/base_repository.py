@@ -18,3 +18,4 @@ class BaseRepository(Generic[T], metaclass=SingletonMeta):
 
     def add(self, element: T):
         self.db[element.id] = element
+        return element

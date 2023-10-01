@@ -9,7 +9,7 @@ class OrderFieldType(Enum):
     def validate(self, value: any):
         def is_datetime(x):
             try:
-                strptime(x)
+                strptime(x, '%d-%m-%Y')
                 return True
             except:
                 return False

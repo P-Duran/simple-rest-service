@@ -14,6 +14,9 @@ class ProductService:
     def create_new(self, product: ProductRequest):
         return self._product_repository.add(ProductEntity(**product.__dict__))
 
+    def get_by_id(self, id: UUID):
+        return self._product_repository.find_by_id(id)
+
     def get_all(self):
         return self._product_repository.find_all()
 
@@ -24,4 +27,4 @@ class ProductService:
         for order in orders:
             popularity = len(self._order_service.get_orders_by_product(order.product_id))
             active_products.append(self._product_repository.find_by_id(order.product_id))
-        return active_products
+        return active_products.sort(key=lambda p: p.date_added)
