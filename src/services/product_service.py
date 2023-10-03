@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from fastapi.exceptions import ValidationException
+
 from model.dto.enriched_product import EnrichedProduct
 from model.entities.product_entity import ProductEntity
 from model.requests.product_request import ProductRequest
@@ -22,9 +24,16 @@ class ProductService:
                                    orders=len(self._order_service.get_orders_by_product(product.id)))
         return None
 
-    def get_all(self):
-        return [EnrichedProduct(**p.__dict__, orders=len(self._order_service.get_orders_by_product(p.id))) for p in
-                self._product_repository.find_all()]
+    def get_all(self, order_by: str = None):
+        if order_by is None:
+            order_by = "date_added"
+
+        if order_by not in EnrichedProduct.model_fields.keys():
+            raise ValidationException(errors=[
+                f"The order_by field '{order_by}' is not one of the following {EnrichedProduct.model_fields.keys()}"])
+        return sorted(
+            [EnrichedProduct(**p.__dict__, orders=len(self._order_service.get_orders_by_product(p.id))) for p in
+             self._product_repository.find_all()], key=lambda p: p.__dict__[order_by])
 
     def get_by_reservation(self, reservation_id: UUID):
         orders = self._order_service.get_orders_by_reservation(reservation_id)

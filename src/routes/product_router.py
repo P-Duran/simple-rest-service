@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException
@@ -12,8 +13,8 @@ router = APIRouter(
 
 
 @router.get("")
-async def get_all():
-    return ProductService().get_all()
+async def get_all(order_by: Optional[str] = None):
+    return ProductService().get_all(order_by)
 
 
 @router.get("/{product_id}")
