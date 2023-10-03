@@ -24,11 +24,6 @@ async def get_by_id(product_id: UUID):
     return product
 
 
-@router.get("/active")
-async def get_active_by_reservation(reservation_id: UUID):
-    return ProductService().get_active_by_reservation(reservation_id)
-
-
 @router.post("")
 async def create(product: ProductRequest):
     return ProductService().create_new(product)

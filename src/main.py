@@ -41,8 +41,3 @@ async def validation_exception_handler(request, exc: ValidationException):
         status_code=400,
         content=exc.errors(),
     )
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
