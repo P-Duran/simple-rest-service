@@ -12,6 +12,8 @@ class OrderValidationService:
     def validate(self, order: OrderRequest):
         validation_errors = []
         product = self._product_repository.find_by_id(order.product_id)
+        #Also should be some kind of validation for the reservation but since reservations are not the focus of the problem
+        #I'm going to assume that reservation_id is always correct
         if product:
             for order_field in order.fields:
                 product_field = next((f for f in product.order_fields if f.name == order_field.field), None)

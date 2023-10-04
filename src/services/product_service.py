@@ -27,6 +27,8 @@ class ProductService:
     def get_all(self, order_by: str = None):
         if order_by is None:
             order_by = "date_added"
+            # It would be nice to have the name of the field taken from the class itself instead,
+            # but it is not easy to do in a simple way, and in this way is really readable what is happening
 
         if order_by not in EnrichedProduct.model_fields.keys():
             raise ValidationException(errors=[
