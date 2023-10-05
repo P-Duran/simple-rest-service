@@ -35,7 +35,7 @@ class ProductService:
     def get_all(self, order_by: str = None):
         return sorted(
             [EnrichedProduct(**p.__dict__, orders=len(self._order_service.get_orders_by_product(p.id))) for p in
-             self._product_repository.find_all()], key=lambda p: _order_by(p, order_by))
+             self._product_repository.find_all()], key=lambda p: _order_by(p, order_by), reverse=True)
 
     def get_by_reservation(self, reservation_id: UUID):
         orders = self._order_service.get_orders_by_reservation(reservation_id)
