@@ -9,6 +9,14 @@ from repositories.product_repository import ProductRepository
 from services.order_service import OrderService
 
 
+def _order_by(product: EnrichedProduct, field: str):
+    if field and field not in EnrichedProduct.model_fields.keys():
+        raise ValidationException(errors=[
+            f"The order_by field '{field}' is not one of the following {EnrichedProduct.model_fields.keys()}"])
+
+    return product.date_added if field is None else product.__dict__[field]
+
+
 class ProductService:
     def __init__(self):
         self._product_repository = ProductRepository()
@@ -25,17 +33,9 @@ class ProductService:
         return None
 
     def get_all(self, order_by: str = None):
-        if order_by is None:
-            order_by = "date_added"
-            # It would be nice to have the name of the field taken from the class itself instead,
-            # but it is not easy to do in a simple way, and in this way is really readable what is happening
-
-        if order_by not in EnrichedProduct.model_fields.keys():
-            raise ValidationException(errors=[
-                f"The order_by field '{order_by}' is not one of the following {EnrichedProduct.model_fields.keys()}"])
         return sorted(
             [EnrichedProduct(**p.__dict__, orders=len(self._order_service.get_orders_by_product(p.id))) for p in
-             self._product_repository.find_all()], key=lambda p: p.__dict__[order_by])
+             self._product_repository.find_all()], key=lambda p: _order_by(p, order_by))
 
     def get_by_reservation(self, reservation_id: UUID):
         orders = self._order_service.get_orders_by_reservation(reservation_id)
